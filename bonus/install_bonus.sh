@@ -126,7 +126,7 @@ create_runtime_pat() {
       scopes: ["api", "write_repository"],
       expires_at: Date.current + 1
     )
-    pat.set_token(SecureRandom.hex(32))
+    pat.set_token(SecureRandom.alphanumeric(20))
     pat.save!
     puts "#{pat.id}:#{pat.token}"
   ' | tail -n 1)"
