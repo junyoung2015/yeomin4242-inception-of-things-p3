@@ -126,9 +126,10 @@ create_runtime_pat() {
       scopes: ["api", "write_repository"],
       expires_at: Date.current + 1
     )
-    pat.set_token(SecureRandom.alphanumeric(20))
+    token_value = SecureRandom.alphanumeric(20)
+    pat.set_token(token_value)
     pat.save!
-    puts "#{pat.id}:#{pat.token}"
+    puts "#{pat.id}:#{token_value}"
   ' | tail -n 1)"
 
   GITLAB_PAT_ID="$${pat_result%%:*}"
