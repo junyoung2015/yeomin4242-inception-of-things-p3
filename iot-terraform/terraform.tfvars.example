@@ -1,0 +1,12 @@
+# Copy to terraform.tfvars and replace only the project ID.
+# terraform.tfvars is intentionally ignored and must never be committed.
+project_id = "replace-with-your-billing-enabled-project-id"
+
+# Confirm N2 capacity/quota in the selected zone before applying.
+region = "asia-northeast3"
+zone   = "asia-northeast3-a"
+
+instance_name     = "iot-l1-kvm"
+machine_type      = "n2-standard-8"
+boot_disk_size_gb = 100
+vagrant_version   = "2.4.9"

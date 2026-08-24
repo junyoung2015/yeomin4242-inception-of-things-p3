@@ -1,0 +1,18 @@
+Vagrant.configure("2") do |config|
+  # Legacy local VirtualBox experiment only. Do not run it together with the
+  # k3d-based bonus installer; the GCP runbook uses the in-cluster GitLab path.
+  config.vm.box = "bento/ubuntu-26.04"
+
+  config.vm.define "gitlab-vm" do |gitlab|
+    gitlab.vm.hostname = "gitlab-vm"
+    gitlab.vm.network "private_network", ip: "192.168.56.150"
+
+    gitlab.vm.provider "virtualbox" do |vb|
+      vb.name = "iot-bonus-gitlab"
+      vb.memory = "8192" # 8GB RAM
+      vb.cpus = 4        # 4 Cores
+    end
+
+    gitlab.vm.provision "shell", path: "install_gitlab.sh"
+  end
+end

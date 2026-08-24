@@ -1,0 +1,71 @@
+SERVER_IP = "192.168.56.110"
+WORKER_IP = "192.168.56.111"
+LIBVIRT_NETWORK = "iot-vagrant-private"
+TOKEN_FILE = "/vagrant/.runtime/k3s-token"
+
+Vagrant.configure("2") do |config|
+  # The bento Ubuntu 26.04 box supports both VirtualBox and libvirt. The
+  # default Vagrant NAT adapter remains the management/download interface;
+  # the explicit static adapter below is only for the subject's K3s network.
+  config.vm.box = "bento/ubuntu-26.04"
+  config.vm.boot_timeout = 600
+  config.vm.synced_folder ".", "/vagrant", type: "rsync", rsync__auto: true
+
+  config.vm.define "yeominS" do |server|
+    server.vm.hostname = "yeominS"
+    server.vm.network "private_network",
+      ip: SERVER_IP,
+      libvirt__network_name: LIBVIRT_NETWORK,
+      libvirt__dhcp_enabled: false
+
+    # Retained for local VirtualBox compatibility. GCP executions always use
+    # the libvirt provider, never VirtualBox.
+    server.vm.provider "virtualbox" do |virtualbox|
+      virtualbox.memory = 2048
+      virtualbox.cpus = 2
+      virtualbox.customize ["modifyvm", :id, "--uart1", "0x3F8", "4"]
+      virtualbox.customize ["modifyvm", :id, "--uartmode1", "file", File::NULL]
+      virtualbox.customize ["modifyvm", :id, "--cableconnected1", "on"]
+    end
+
+    server.vm.provider "libvirt" do |libvirt|
+      libvirt.driver = "kvm"
+      libvirt.memory = 2048
+      libvirt.cpus = 2
+    end
+
+    server.vm.provision "shell",
+      privileged: true,
+      path: "scripts/server.sh",
+      args: [SERVER_IP, TOKEN_FILE]
+  end
+
+  config.vm.define "yeominSW" do |worker|
+    worker.vm.hostname = "yeominSW"
+    worker.vm.network "private_network",
+      ip: WORKER_IP,
+      libvirt__network_name: LIBVIRT_NETWORK,
+      libvirt__dhcp_enabled: false
+
+    # Retained for local VirtualBox compatibility. GCP executions always use
+    # the libvirt provider, never VirtualBox.
+    worker.vm.provider "virtualbox" do |virtualbox|
+      virtualbox.memory = 1024
+      virtualbox.cpus = 1
+      virtualbox.customize ["modifyvm", :id, "--uart1", "0x3F8", "4"]
+      virtualbox.customize ["modifyvm", :id, "--uartmode1", "file", File::NULL]
+      virtualbox.customize ["modifyvm", :id, "--cableconnected1", "on"]
+    end
+
+    worker.vm.provider "libvirt" do |libvirt|
+      libvirt.driver = "kvm"
+      libvirt.memory = 1024
+      libvirt.cpus = 1
+    end
+
+    worker.vm.provision "shell",
+      privileged: true,
+      path: "scripts/serverWorker.sh",
+      args: [SERVER_IP, WORKER_IP, TOKEN_FILE]
+  end
+end

@@ -1,0 +1,20 @@
+resources:
+  - ../../dev
+
+patches:
+  - target:
+      kind: Service
+      name: playground-service
+    patch: |-
+      - op: replace
+        path: /spec/type
+        value: ClusterIP
+      - op: remove
+        path: /spec/ports/0/nodePort
+  - target:
+      kind: Ingress
+      name: playground-ingress
+    patch: |-
+      - op: replace
+        path: /spec/rules/0/host
+        value: playground-gitlab.local

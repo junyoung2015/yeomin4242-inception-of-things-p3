@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: playground-app
+  namespace: argocd
+spec:
+  project: default
+  destination:
+    namespace: dev
+    server: https://kubernetes.default.svc
+  source:
+    # install_bonus.sh renders this placeholder only from explicit REPO_URL
+    # and TARGET_REVISION values supplied by the operator.
+    repoURL: "https://github.com/REPLACE_WITH_GITHUB_OWNER/yeomin4242-inception-of-things-p3.git"
+    targetRevision: "main"
+    path: "dev"
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

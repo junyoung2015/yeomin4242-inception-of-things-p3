@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: playground-app-gitlab
+  namespace: argocd
+spec:
+  project: default
+  destination:
+    namespace: dev-gitlab
+    server: https://kubernetes.default.svc
+  source:
+    # The local GitLab service is ClusterIP-only. Port 9999 is deliberately
+    # exposed inside the cluster as well so its external_url stays consistent
+    # for both Argo CD and the temporary localhost port-forward.
+    repoURL: http://gitlab.gitlab.svc.cluster.local:9999/root/iot-bonus.git
+    targetRevision: main
+    path: bonus/gitlab-dev
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

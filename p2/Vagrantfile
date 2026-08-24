@@ -1,0 +1,39 @@
+SERVER_IP = "192.168.56.110"
+LIBVIRT_NETWORK = "iot-vagrant-private"
+
+Vagrant.configure("2") do |config|
+  # The default Vagrant NAT adapter remains for management and package
+  # downloads. The static adapter below is the subject-required K3s interface.
+  config.vm.box = "bento/ubuntu-26.04"
+  config.vm.boot_timeout = 600
+  config.vm.synced_folder ".", "/vagrant", type: "rsync", rsync__auto: true
+
+  config.vm.define "yeominS" do |vm|
+    vm.vm.hostname = "yeominS"
+    vm.vm.network "private_network",
+      ip: SERVER_IP,
+      libvirt__network_name: LIBVIRT_NETWORK,
+      libvirt__dhcp_enabled: false
+
+    # Retained for local VirtualBox compatibility. The GCP runbook always
+    # starts this VM with: vagrant up --provider=libvirt
+    vm.vm.provider "virtualbox" do |virtualbox|
+      virtualbox.memory = 2048
+      virtualbox.cpus = 2
+      virtualbox.customize ["modifyvm", :id, "--uart1", "0x3F8", "4"]
+      virtualbox.customize ["modifyvm", :id, "--uartmode1", "file", File::NULL]
+      virtualbox.customize ["modifyvm", :id, "--cableconnected1", "on"]
+    end
+
+    vm.vm.provider "libvirt" do |libvirt|
+      libvirt.driver = "kvm"
+      libvirt.memory = 2048
+      libvirt.cpus = 2
+    end
+
+    vm.vm.provision "shell",
+      privileged: true,
+      path: "scripts/server.sh",
+      args: [SERVER_IP]
+  end
+end
