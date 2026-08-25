@@ -64,7 +64,10 @@ spec:
     spec:
       containers:
         - name: gitlab
-          image: gitlab/gitlab-ce:19.1.1-ce.0
+          # GitLab 19.3 is the current stable release verified on 2026-08-25.
+          # Pin the exact CE image so the evaluator can reproduce this tested
+          # environment rather than silently receiving a later, unverified tag.
+          image: gitlab/gitlab-ce:19.3.0-ce.0
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
