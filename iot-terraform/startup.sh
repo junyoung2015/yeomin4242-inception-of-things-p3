@@ -26,7 +26,9 @@ apt-get install -y \
   make \
   openssl \
   pkg-config \
-  qemu-kvm \
+  # Ubuntu 26.04 no longer exposes a directly installable qemu-kvm package.
+  # qemu-system-x86 supplies the KVM-capable QEMU binaries used by libvirt.
+  qemu-system-x86 \
   libvirt-clients \
   libvirt-daemon-system \
   libvirt-dev \
