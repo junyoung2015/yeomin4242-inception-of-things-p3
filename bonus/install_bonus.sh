@@ -132,8 +132,8 @@ create_runtime_pat() {
     puts "#{pat.id}:#{token_value}"
   ' | tail -n 1)"
 
-  GITLAB_PAT_ID="$${pat_result%%:*}"
-  GITLAB_TOKEN="$${pat_result#*:}"
+  GITLAB_PAT_ID="${pat_result%%:*}"
+  GITLAB_TOKEN="${pat_result#*:}"
 
   if ! [[ "$GITLAB_PAT_ID" =~ ^[0-9]+$ ]] || ! [[ "$GITLAB_TOKEN" =~ ^[A-Za-z0-9_-]+$ ]]; then
     echo "GitLab did not return a valid runtime access token." >&2
@@ -205,9 +205,9 @@ copy_sanitized_project() {
 
   for item in .gitignore README.md dev p1 p2 p3 bonus iot-terraform scripts; do
     if [ -d "$REPO_ROOT/$item" ]; then
-      rsync -a --delete "$${rsync_excludes[@]}" "$REPO_ROOT/$item/" "$IMPORT_DIR/$item/"
+      rsync -a --delete "${rsync_excludes[@]}" "$REPO_ROOT/$item/" "$IMPORT_DIR/$item/"
     elif [ -f "$REPO_ROOT/$item" ]; then
-      rsync -a "$${rsync_excludes[@]}" "$REPO_ROOT/$item" "$IMPORT_DIR/"
+      rsync -a "${rsync_excludes[@]}" "$REPO_ROOT/$item" "$IMPORT_DIR/"
     fi
   done
 }

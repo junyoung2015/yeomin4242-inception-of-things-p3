@@ -101,8 +101,8 @@ create_test_pat() {
     puts "#{pat.id}:#{token_value}"
   ' | tail -n 1)"
 
-  GITLAB_PAT_ID="$${pat_result%%:*}"
-  GITLAB_TOKEN="$${pat_result#*:}"
+  GITLAB_PAT_ID="${pat_result%%:*}"
+  GITLAB_TOKEN="${pat_result#*:}"
 
   if ! [[ "$GITLAB_PAT_ID" =~ ^[0-9]+$ ]] || ! [[ "$GITLAB_TOKEN" =~ ^[A-Za-z0-9_-]+$ ]]; then
     echo "GitLab did not return a valid runtime push token." >&2
