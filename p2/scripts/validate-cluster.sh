@@ -3,6 +3,9 @@
 set -euo pipefail
 
 SERVER_IP="192.168.56.110"
+# Kubernetes resource names are lower-case DNS labels even though the VM
+# hostname required by the subject remains yeominS.
+SERVER_NODE="yeomins"
 
 assert_route() {
   local label="$1"
@@ -36,7 +39,7 @@ echo "=== Checking yeominS and its required static address ==="
 vagrant ssh yeominS -c 'test "$(hostname)" = yeominS'
 vagrant ssh yeominS -c "ip -o -4 addr show | grep -F '$SERVER_IP/'"
 vagrant ssh yeominS -c "systemctl is-active --quiet k3s"
-vagrant ssh yeominS -c "KUBECONFIG=/home/vagrant/.kube/config kubectl wait --for=condition=Ready node/yeominS --timeout=180s"
+vagrant ssh yeominS -c "KUBECONFIG=/home/vagrant/.kube/config kubectl wait --for=condition=Ready node/$SERVER_NODE --timeout=180s"
 
 echo "=== Checking deployments, replicas, services, endpoints, and Ingress ==="
 vagrant ssh yeominS -c "KUBECONFIG=/home/vagrant/.kube/config kubectl get deployments app-1 app-2 app-3 -o wide"
