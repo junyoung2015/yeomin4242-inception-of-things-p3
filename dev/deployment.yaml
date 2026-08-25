@@ -17,7 +17,7 @@ spec:
       containers:
         - name: playground
           # 여기서 v1, v2 버전을 변경 가능
-          image: wil42/playground:v1
+          image: wil42/playground:v2
           imagePullPolicy: Always
           ports:
             - containerPort: 8888
