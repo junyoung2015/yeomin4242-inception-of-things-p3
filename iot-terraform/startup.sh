@@ -17,6 +17,9 @@ VAGRANT_DEB="/tmp/vagrant_${VAGRANT_VERSION}_amd64.deb"
 echo "[iot-bootstrap] started at $(date --iso-8601=seconds)"
 
 apt-get update
+
+# Ubuntu 26.04 no longer exposes a directly installable qemu-kvm package.
+# qemu-system-x86 supplies the KVM-capable QEMU binaries used by libvirt.
 apt-get install -y \
   ca-certificates \
   curl \
@@ -26,8 +29,6 @@ apt-get install -y \
   make \
   openssl \
   pkg-config \
-  # Ubuntu 26.04 no longer exposes a directly installable qemu-kvm package.
-  # qemu-system-x86 supplies the KVM-capable QEMU binaries used by libvirt.
   qemu-system-x86 \
   libvirt-clients \
   libvirt-daemon-system \
