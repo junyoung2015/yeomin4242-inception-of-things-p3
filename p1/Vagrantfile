@@ -33,6 +33,7 @@ Vagrant.configure("2") do |config|
       # bento/ubuntu-26.04 is a UEFI/GPT image. GCE's KVM host provides this
       # OVMF firmware after startup.sh installs qemu-system-x86.
       libvirt.loader = "/usr/share/OVMF/OVMF_CODE_4M.fd"
+      libvirt.nvram = "/var/lib/libvirt/qemu/nvram/p1_yeominS_VARS.fd"
       libvirt.memory = 2048
       libvirt.cpus = 2
     end
@@ -64,6 +65,7 @@ Vagrant.configure("2") do |config|
       libvirt.driver = "kvm"
       # Keep the worker boot mode identical to the UEFI server image.
       libvirt.loader = "/usr/share/OVMF/OVMF_CODE_4M.fd"
+      libvirt.nvram = "/var/lib/libvirt/qemu/nvram/p1_yeominSW_VARS.fd"
       libvirt.memory = 1024
       libvirt.cpus = 1
     end

@@ -29,6 +29,7 @@ Vagrant.configure("2") do |config|
       libvirt.driver = "kvm"
       # bento/ubuntu-26.04 is a UEFI/GPT image on the GCE KVM path.
       libvirt.loader = "/usr/share/OVMF/OVMF_CODE_4M.fd"
+      libvirt.nvram = "/var/lib/libvirt/qemu/nvram/p2_yeominS_VARS.fd"
       libvirt.memory = 2048
       libvirt.cpus = 2
     end
